@@ -31,19 +31,22 @@ typedef struct {
 
 enum { // add any other tap dance keys to this enum
     TD_MU_TG_CL,
+    TD_SP_LN_ET,
     TD_F_F5,
+    TD_C_MYCM,
 };
 
 /* Declare the functions to be used with your tap dance key(s)
 TD_MU_TG_CL is Single-Tap = MUTE, Hold = MO(_TOGGLE), Dobble-Tap = ALT+F4
+TD_SP_LN_ET is Single-Tap = SPC, Hold = MO(_NAV), Dobble-Tap = ENT
 */
 
 // Function associated with all tap dances
 td_state_t cur_dance(tap_dance_state_t *state);
 
 // Functions associated with individual tap dances
-void ql_finished(tap_dance_state_t *state, void *user_data);
-void ql_reset(tap_dance_state_t *state, void *user_data);
+void at_finished(tap_dance_state_t *state, void *user_data);
+void at_reset(tap_dance_state_t *state, void *user_data);
 
 // Determine the current tap dance state
 td_state_t cur_dance(tap_dance_state_t *state) {
@@ -61,7 +64,7 @@ static td_tap_t mul_tap_state = {
 };
 
 // Functions that control what our tap dance key does
-void ql_finished(tap_dance_state_t *state, void *user_data) {
+void at_finished(tap_dance_state_t *state, void *user_data) {
     mul_tap_state.state = cur_dance(state);
     switch (mul_tap_state.state) {
         case TD_SINGLE_TAP:
@@ -78,7 +81,7 @@ void ql_finished(tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void ql_reset(tap_dance_state_t *state, void *user_data) {
+void at_reset(tap_dance_state_t *state, void *user_data) {
     // If the key was held down and now is released then switch off the layer
     if (mul_tap_state.state == TD_SINGLE_HOLD) {
         layer_off(_TOGGLE);
@@ -86,10 +89,48 @@ void ql_reset(tap_dance_state_t *state, void *user_data) {
     mul_tap_state.state = TD_NONE;
 }
 
+// Functions associated with individual tap dances
+void bt_finished(tap_dance_state_t *state, void *user_data);
+void bt_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with example tap dance key
+static td_tap_t cnt_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void bt_finished(tap_dance_state_t *state, void *user_data) {
+    cnt_tap_state.state = cur_dance(state);
+    switch (cnt_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_SPC);
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(_NAV);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code(KC_ENT);
+            break;
+        default:
+            break;
+    }
+}
+
+void bt_reset(tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (cnt_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(_NAV);
+    }
+    cnt_tap_state.state = TD_NONE;
+}
+
 // Associate our tap dance key with its functionality
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_MU_TG_CL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ql_finished, ql_reset),
+    [TD_MU_TG_CL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, at_finished, at_reset),
+    [TD_SP_LN_ET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bt_finished, bt_reset),
     [TD_F_F5] = ACTION_TAP_DANCE_DOUBLE(KC_F, KC_F5),
+    [TD_C_MYCM] = ACTION_TAP_DANCE_DOUBLE(KC_C, KC_MYCM),
 };
 
 
@@ -106,11 +147,15 @@ const uint16_t PROGMEM combo8[] = {KC_TAB, KC_UP, COMBO_END};
 const uint16_t PROGMEM combo9[] = {KC_LEFT, KC_DOWN, KC_RGHT, COMBO_END};
 const uint16_t PROGMEM combo10[] = {TD(TD_F_F5), LT(_SCALE, KC_MRWD), COMBO_END};
 const uint16_t PROGMEM combo11[] = {KC_MPRV, KC_MNXT, COMBO_END};
-const uint16_t PROGMEM combo12[] = {KC_C, LT(_VOLUME, KC_MFFD), COMBO_END};
+const uint16_t PROGMEM combo12[] = {TD(TD_C_MYCM), LT(_VOLUME, KC_MFFD), COMBO_END};
 const uint16_t PROGMEM combo13[] = {TD(TD_F_F5), KC_MPRV, COMBO_END};
-const uint16_t PROGMEM combo14[] = {KC_C, KC_MPRV, COMBO_END};
+const uint16_t PROGMEM combo14[] = {TD(TD_C_MYCM), KC_MPRV, COMBO_END};
 const uint16_t PROGMEM combo15[] = {LT(_SCALE, KC_MRWD), KC_MNXT, COMBO_END};
 const uint16_t PROGMEM combo16[] = {LT(_VOLUME, KC_MFFD), KC_MNXT, COMBO_END};
+const uint16_t PROGMEM combo17[] = {LCTL(KC_EQL), LCTL(KC_0), COMBO_END};
+const uint16_t PROGMEM combo18[] = {LCTL(KC_MINS), LCTL(KC_1), COMBO_END};
+const uint16_t PROGMEM combo19[] = {LCTL(KC_EQL), LCTL(KC_MINS), COMBO_END};
+const uint16_t PROGMEM combo20[] = {LCTL(KC_0), LCTL(KC_1), COMBO_END};
 
 combo_t key_combos[] = {
   COMBO(combo0, KC_DEL),
@@ -130,6 +175,10 @@ combo_t key_combos[] = {
   COMBO(combo14, LALT(KC_RGHT)),
   COMBO(combo15, RSG(KC_LEFT)),
   COMBO(combo16, RSG(KC_RGHT)),
+  COMBO(combo17, KC_HOME),
+  COMBO(combo18, KC_END),
+  COMBO(combo19, KC_PGUP),
+  COMBO(combo20, KC_PGDN),
 };
 
 
@@ -143,8 +192,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
     [_MEDIA] = LAYOUT(
         TD(TD_MU_TG_CL),
-        TD(TD_F_F5), KC_MPRV, KC_C,
-        LT(_SCALE, KC_MRWD), KC_MNXT, LT(_VOLUME, KC_MFFD), LT(_NAV, KC_SPC)
+        TD(TD_F_F5), KC_MPRV, TD(TD_C_MYCM),
+        LT(_SCALE, KC_MRWD), KC_MNXT, LT(_VOLUME, KC_MFFD), TD(TD_SP_LN_ET)
     ),
     [_NAV] = LAYOUT( 
         LT(_TOGGLE, KC_ESC),
