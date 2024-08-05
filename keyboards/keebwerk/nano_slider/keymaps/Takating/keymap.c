@@ -30,21 +30,29 @@ typedef struct {
 } td_tap_t;
 
 enum { // add any other tap dance keys to this enum
-    TD_MU_TG_CL,
-    TD_SP_LN_ET,
     TD_F_F5,
     TD_C_MYCM,
+    TD_MU_TG_CL,
+    TD_SP_LN_ET,
+    TD_MR_LS_GL,
+    TD_MF_LV_GR,
+    TD_MP_GU,
+    TD_MN_GD,
 };
 
 /* Declare the functions to be used with your tap dance key(s)
 TD_MU_TG_CL is Single-Tap = MUTE, Hold = MO(_TOGGLE), Dobble-Tap = ALT+F4
 TD_SP_LN_ET is Single-Tap = SPC, Hold = MO(_NAV), Dobble-Tap = ENT
+TD_MR_LS_GL is Single-Tap = KC_MRWD, Hold = MO(_SCALE), Dobble-Tap = GUI+Left
+TD_MF_LV_GR is Single-Tap = KC_MFFD, Hold = MO(_VOLUME), Dobble-Tap = GUI+Right
+TD_MP_GU is Single-Tap = KC_MPRV, Dobble-Tap = GUI+Up
+TD_MN_GD is Single-Tap = KC_MNXT, Dobble-Tap = GUI+Down
 */
 
 // Function associated with all tap dances
 td_state_t cur_dance(tap_dance_state_t *state);
 
-// Functions associated with individual tap dances
+// Functions associated with TD_MU_TG_CL tap dances
 void at_finished(tap_dance_state_t *state, void *user_data);
 void at_reset(tap_dance_state_t *state, void *user_data);
 
@@ -57,7 +65,7 @@ td_state_t cur_dance(tap_dance_state_t *state) {
     else return TD_UNKNOWN;
 }
 
-// Initialize tap structure associated with example tap dance key
+// Initialize tap structure associated with this tap dance key
 static td_tap_t mul_tap_state = {
     .is_press_action = true,
     .state = TD_NONE
@@ -89,11 +97,11 @@ void at_reset(tap_dance_state_t *state, void *user_data) {
     mul_tap_state.state = TD_NONE;
 }
 
-// Functions associated with individual tap dances
+// Functions associated with TD_SP_LN_ET tap dances
 void bt_finished(tap_dance_state_t *state, void *user_data);
 void bt_reset(tap_dance_state_t *state, void *user_data);
 
-// Initialize tap structure associated with example tap dance key
+// Initialize tap structure associated with this tap dance key
 static td_tap_t cnt_tap_state = {
     .is_press_action = true,
     .state = TD_NONE
@@ -125,16 +133,158 @@ void bt_reset(tap_dance_state_t *state, void *user_data) {
     cnt_tap_state.state = TD_NONE;
 }
 
+// Functions associated with TD_MR_LS_GL tap dances
+void ct_finished(tap_dance_state_t *state, void *user_data);
+void ct_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t mgl_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void ct_finished(tap_dance_state_t *state, void *user_data) {
+    mgl_tap_state.state = cur_dance(state);
+    switch (mgl_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_MRWD);
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(_SCALE);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code16(LGUI(KC_LEFT));
+            break;
+        default:
+            break;
+    }
+}
+
+void ct_reset(tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (mgl_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(_SCALE);
+    }
+    mgl_tap_state.state = TD_NONE;
+}
+
+// Functions associated with TD_MF_LV_GR tap dances
+void dt_finished(tap_dance_state_t *state, void *user_data);
+void dt_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t mgr_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void dt_finished(tap_dance_state_t *state, void *user_data) {
+    mgr_tap_state.state = cur_dance(state);
+    switch (mgr_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_MFFD);
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(_VOLUME);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code16(LGUI(KC_RGHT));
+            break;
+        default:
+            break;
+    }
+}
+
+void dt_reset(tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (mgr_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(_VOLUME);
+    }
+    mgr_tap_state.state = TD_NONE;
+}
+
+// Functions associated with TD_MP_GU tap dances
+void et_finished(tap_dance_state_t *state, void *user_data);
+void et_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t mgu_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void et_finished(tap_dance_state_t *state, void *user_data) {
+    mgu_tap_state.state = cur_dance(state);
+    switch (mgu_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_MPRV);
+            break;
+        case TD_SINGLE_HOLD:
+            tap_code(KC_MPRV);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code16(LGUI(KC_UP));
+            break;
+        default:
+            break;
+    }
+}
+
+void et_reset(tap_dance_state_t *state, void *user_data) {
+    mgu_tap_state.state = TD_NONE;
+}
+
+// Functions associated with TD_MN_GD tap dances
+void ft_finished(tap_dance_state_t *state, void *user_data);
+void ft_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t mgd_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void ft_finished(tap_dance_state_t *state, void *user_data) {
+    mgd_tap_state.state = cur_dance(state);
+    switch (mgd_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_MNXT);
+            break;
+        case TD_SINGLE_HOLD:
+            tap_code(KC_MNXT);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code16(LGUI(KC_DOWN));
+            break;
+        default:
+            break;
+    }
+}
+
+void ft_reset(tap_dance_state_t *state, void *user_data) {
+    mgd_tap_state.state = TD_NONE;
+}
+
 // Associate our tap dance key with its functionality
 tap_dance_action_t tap_dance_actions[] = {
-    [TD_MU_TG_CL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, at_finished, at_reset),
-    [TD_SP_LN_ET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bt_finished, bt_reset),
+    // TAP_DANCE Simple one here
     [TD_F_F5] = ACTION_TAP_DANCE_DOUBLE(KC_F, KC_F5),
     [TD_C_MYCM] = ACTION_TAP_DANCE_DOUBLE(KC_C, KC_MYCM),
+    // TAP_DANCE Complex one here
+    [TD_MU_TG_CL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, at_finished, at_reset),
+    [TD_SP_LN_ET] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bt_finished, bt_reset),
+    [TD_MR_LS_GL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_finished, ct_reset),
+    [TD_MF_LV_GR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dt_finished, dt_reset),
+    [TD_MP_GU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, et_finished, et_reset),
+    [TD_MN_GD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ft_finished, ft_reset),
 };
 
 
-// Combos setting by Takating 20240804-v1.1 (Put below "enum layer_names")
+// Combos setting by Takating 20240805-v1.2 (Put below "enum layer_names")
 const uint16_t PROGMEM combo0[] = {LSFT(KC_TAB), KC_TAB, COMBO_END};
 const uint16_t PROGMEM combo1[] = {KC_LEFT, KC_DOWN, COMBO_END};
 const uint16_t PROGMEM combo2[] = {KC_RGHT, KC_DOWN, COMBO_END};
@@ -145,13 +295,14 @@ const uint16_t PROGMEM combo6[] = {KC_TAB, KC_RGHT, COMBO_END};
 const uint16_t PROGMEM combo7[] = {LSFT(KC_TAB), KC_UP, COMBO_END};
 const uint16_t PROGMEM combo8[] = {KC_TAB, KC_UP, COMBO_END};
 const uint16_t PROGMEM combo9[] = {KC_LEFT, KC_DOWN, KC_RGHT, COMBO_END};
-const uint16_t PROGMEM combo10[] = {TD(TD_F_F5), LT(_SCALE, KC_MRWD), COMBO_END};
-const uint16_t PROGMEM combo11[] = {KC_MPRV, KC_MNXT, COMBO_END};
-const uint16_t PROGMEM combo12[] = {TD(TD_C_MYCM), LT(_VOLUME, KC_MFFD), COMBO_END};
-const uint16_t PROGMEM combo13[] = {TD(TD_F_F5), KC_MPRV, COMBO_END};
-const uint16_t PROGMEM combo14[] = {TD(TD_C_MYCM), KC_MPRV, COMBO_END};
-const uint16_t PROGMEM combo15[] = {LT(_SCALE, KC_MRWD), KC_MNXT, COMBO_END};
-const uint16_t PROGMEM combo16[] = {LT(_VOLUME, KC_MFFD), KC_MNXT, COMBO_END};
+const uint16_t PROGMEM combo9b[] = {TD(TD_MR_LS_GL), TD(TD_MN_GD), TD(TD_MF_LV_GR), COMBO_END};
+const uint16_t PROGMEM combo10[] = {TD(TD_F_F5), TD(TD_MR_LS_GL), COMBO_END};
+const uint16_t PROGMEM combo11[] = {TD(TD_MP_GU), TD(TD_MN_GD), COMBO_END};
+const uint16_t PROGMEM combo12[] = {TD(TD_C_MYCM), TD(TD_MF_LV_GR), COMBO_END};
+const uint16_t PROGMEM combo13[] = {TD(TD_F_F5), TD(TD_MP_GU), COMBO_END};
+const uint16_t PROGMEM combo14[] = {TD(TD_C_MYCM), TD(TD_MP_GU), COMBO_END};
+const uint16_t PROGMEM combo15[] = {TD(TD_MR_LS_GL), TD(TD_MN_GD), COMBO_END};
+const uint16_t PROGMEM combo16[] = {TD(TD_MF_LV_GR), TD(TD_MN_GD), COMBO_END};
 const uint16_t PROGMEM combo17[] = {LCTL(KC_EQL), LCTL(KC_0), COMBO_END};
 const uint16_t PROGMEM combo18[] = {LCTL(KC_MINS), LCTL(KC_1), COMBO_END};
 const uint16_t PROGMEM combo19[] = {LCTL(KC_EQL), LCTL(KC_MINS), COMBO_END};
@@ -168,6 +319,7 @@ combo_t key_combos[] = {
   COMBO(combo7, RCS(KC_PGUP)),
   COMBO(combo8, RCS(KC_PGDN)),
   COMBO(combo9, LGUI(KC_TAB)),
+  COMBO(combo9b, LGUI(KC_TAB)),
   COMBO(combo10, KC_F11),
   COMBO(combo11, KC_F9),
   COMBO(combo12, KC_MPLY),
@@ -192,8 +344,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
     [_MEDIA] = LAYOUT(
         TD(TD_MU_TG_CL),
-        TD(TD_F_F5), KC_MPRV, TD(TD_C_MYCM),
-        LT(_SCALE, KC_MRWD), KC_MNXT, LT(_VOLUME, KC_MFFD), TD(TD_SP_LN_ET)
+        TD(TD_F_F5), TD(TD_MP_GU), TD(TD_C_MYCM),
+        TD(TD_MR_LS_GL), TD(TD_MN_GD), TD(TD_MF_LV_GR), TD(TD_SP_LN_ET)
     ),
     [_NAV] = LAYOUT( 
         LT(_TOGGLE, KC_ESC),
