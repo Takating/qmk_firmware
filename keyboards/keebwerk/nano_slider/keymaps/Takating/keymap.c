@@ -21,7 +21,8 @@ typedef enum {
     TD_UNKNOWN,
     TD_SINGLE_TAP,
     TD_SINGLE_HOLD,
-    TD_DOUBLE_TAP
+    TD_DOUBLE_TAP,
+    TD_DOUBLE_HOLD
 } td_state_t;
 
 typedef struct {
@@ -41,12 +42,12 @@ enum { // add any other tap dance keys to this enum
 };
 
 /* Declare the functions to be used with your tap dance key(s)
-TD_MU_TG_CL is Single-Tap = MUTE, Hold = MO(_TOGGLE), Dobble-Tap = ALT+F4
-TD_SP_LN_ET is Single-Tap = SPC, Hold = MO(_NAV), Dobble-Tap = ENT
-TD_MR_LS_GL is Single-Tap = KC_MRWD, Hold = MO(_SCALE), Dobble-Tap = GUI+Left
-TD_MF_LV_GR is Single-Tap = KC_MFFD, Hold = MO(_VOLUME), Dobble-Tap = GUI+Right
-TD_MP_GU is Single-Tap = KC_MPRV, Dobble-Tap = GUI+Up
-TD_MN_GD is Single-Tap = KC_MNXT, Dobble-Tap = GUI+Down
+TD_MU_TG_CL is Single-Tap = MUTE, Hold = MO(_TOGGLE), Double-Tap = ALT+F4
+TD_SP_LN_ET is Single-Tap = SPC, Hold = MO(_NAV), Double-Tap = ENT
+TD_MR_LS_GL is Single-Tap = KC_MRWD, Hold = MO(_SCALE), Double-Tap = GUI+Left, Double-Hold = GUI+CTL+Left
+TD_MF_LV_GR is Single-Tap = KC_MFFD, Hold = MO(_VOLUME), Double-Tap = GUI+Right, Double-Hold = GUI+CTL+Right
+TD_MP_GU is Single-Tap = KC_MPRV, Double-Tap = GUI+Up, Double-Hold = GUI+CTL+D
+TD_MN_GD is Single-Tap = KC_MNXT, Double-Tap = GUI+Down, Double-Hold = GUI+CTL+F4
 */
 
 // Function associated with all tap dances
@@ -59,10 +60,13 @@ void at_reset(tap_dance_state_t *state, void *user_data);
 // Determine the current tap dance state
 td_state_t cur_dance(tap_dance_state_t *state) {
     if (state->count == 1) {
-        if (!state->pressed) return TD_SINGLE_TAP;
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
         else return TD_SINGLE_HOLD;
-    } else if (state->count == 2) return TD_DOUBLE_TAP;
-    else return TD_UNKNOWN;
+    } else if (state->count == 2) {
+        if (state->interrupted || !state->pressed) return TD_DOUBLE_TAP;
+        else return TD_DOUBLE_HOLD;
+    }
+    return TD_UNKNOWN;
 }
 
 // Initialize tap structure associated with this tap dance key
@@ -156,6 +160,10 @@ void ct_finished(tap_dance_state_t *state, void *user_data) {
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_LEFT));
             break;
+        case TD_DOUBLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_LEFT);
+            break;
         default:
             break;
     }
@@ -165,6 +173,8 @@ void ct_reset(tap_dance_state_t *state, void *user_data) {
     // If the key was held down and now is released then switch off the layer
     if (mgl_tap_state.state == TD_SINGLE_HOLD) {
         layer_off(_SCALE);
+    } else if (mgl_tap_state.state == TD_DOUBLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
     }
     mgl_tap_state.state = TD_NONE;
 }
@@ -192,6 +202,10 @@ void dt_finished(tap_dance_state_t *state, void *user_data) {
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_RGHT));
             break;
+        case TD_DOUBLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_RGHT);
+            break;
         default:
             break;
     }
@@ -201,6 +215,8 @@ void dt_reset(tap_dance_state_t *state, void *user_data) {
     // If the key was held down and now is released then switch off the layer
     if (mgr_tap_state.state == TD_SINGLE_HOLD) {
         layer_off(_VOLUME);
+    } else if (mgr_tap_state.state == TD_DOUBLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
     }
     mgr_tap_state.state = TD_NONE;
 }
@@ -223,10 +239,14 @@ void et_finished(tap_dance_state_t *state, void *user_data) {
             tap_code(KC_MPRV);
             break;
         case TD_SINGLE_HOLD:
-            tap_code(KC_MPRV);
+            register_code(KC_MPRV);
             break;
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_UP));
+            break;
+        case TD_DOUBLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_D);
             break;
         default:
             break;
@@ -234,6 +254,16 @@ void et_finished(tap_dance_state_t *state, void *user_data) {
 }
 
 void et_reset(tap_dance_state_t *state, void *user_data) {
+    switch (mgu_tap_state.state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_MPRV);
+            break;
+        case TD_DOUBLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            break;
+        default:
+            break;
+    }
     mgu_tap_state.state = TD_NONE;
 }
 
@@ -255,10 +285,14 @@ void ft_finished(tap_dance_state_t *state, void *user_data) {
             tap_code(KC_MNXT);
             break;
         case TD_SINGLE_HOLD:
-            tap_code(KC_MNXT);
+            register_code(KC_MNXT);
             break;
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_DOWN));
+            break;
+        case TD_DOUBLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_F4);
             break;
         default:
             break;
@@ -266,6 +300,16 @@ void ft_finished(tap_dance_state_t *state, void *user_data) {
 }
 
 void ft_reset(tap_dance_state_t *state, void *user_data) {
+    switch (mgd_tap_state.state) {
+        case TD_SINGLE_HOLD:
+            unregister_code(KC_MNXT);
+            break;
+        case TD_DOUBLE_HOLD:
+            unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            break;
+        default:
+            break;
+    }
     mgd_tap_state.state = TD_NONE;
 }
 
@@ -364,8 +408,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_SCALE] = LAYOUT( 
         LT(_TOGGLE, KC_MUTE),
-        KC_TRNS, LCTL(KC_EQL), LCTL(KC_0),
-        KC_TRNS, LCTL(KC_MINS), LCTL(KC_1), KC_SPC      
+        KC_TRNS, LCTL(KC_EQL), LCTL(KC_1),
+        KC_TRNS, LCTL(KC_MINS), LCTL(KC_0), KC_SPC      
     ),
     [_TOGGLE] = LAYOUT(
         KC_NO,
