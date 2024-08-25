@@ -46,8 +46,8 @@ TD_MU_TG_CL is Single-Tap = MUTE, Hold = MO(_TOGGLE), Double-Tap = ALT+F4
 TD_SP_LN_ET is Single-Tap = SPC, Hold = MO(_NAV), Double-Tap = ENT
 TD_MR_LS_GL is Single-Tap = KC_MRWD, Hold = MO(_SCALE), Double-Tap = GUI+Left, Double-Hold = GUI+CTL+Left
 TD_MF_LV_GR is Single-Tap = KC_MFFD, Hold = MO(_VOLUME), Double-Tap = GUI+Right, Double-Hold = GUI+CTL+Right
-TD_MP_GU is Single-Tap = KC_MPRV, Double-Tap = GUI+Up, Double-Hold = GUI+CTL+D
-TD_MN_GD is Single-Tap = KC_MNXT, Double-Tap = GUI+Down, Double-Hold = GUI+CTL+F4
+TD_MP_GU is Single-Tap = KC_MPRV, Hold = Up, Double-Tap = GUI+Up, Double-Hold = GUI+CTL+D
+TD_MN_GD is Single-Tap = KC_MNXT, Hold = Down, Double-Tap = GUI+Down, Double-Hold = GUI+CTL+F4
 */
 
 // Function associated with all tap dances
@@ -239,7 +239,7 @@ void et_finished(tap_dance_state_t *state, void *user_data) {
             tap_code(KC_MPRV);
             break;
         case TD_SINGLE_HOLD:
-            register_code(KC_MPRV);
+            register_code(KC_UP);
             break;
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_UP));
@@ -256,7 +256,7 @@ void et_finished(tap_dance_state_t *state, void *user_data) {
 void et_reset(tap_dance_state_t *state, void *user_data) {
     switch (mgu_tap_state.state) {
         case TD_SINGLE_HOLD:
-            unregister_code(KC_MPRV);
+            unregister_code(KC_UP);
             break;
         case TD_DOUBLE_HOLD:
             unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
@@ -285,7 +285,7 @@ void ft_finished(tap_dance_state_t *state, void *user_data) {
             tap_code(KC_MNXT);
             break;
         case TD_SINGLE_HOLD:
-            register_code(KC_MNXT);
+            register_code(KC_DOWN);
             break;
         case TD_DOUBLE_TAP:
             tap_code16(LGUI(KC_DOWN));
@@ -302,7 +302,7 @@ void ft_finished(tap_dance_state_t *state, void *user_data) {
 void ft_reset(tap_dance_state_t *state, void *user_data) {
     switch (mgd_tap_state.state) {
         case TD_SINGLE_HOLD:
-            unregister_code(KC_MNXT);
+            unregister_code(KC_DOWN);
             break;
         case TD_DOUBLE_HOLD:
             unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
@@ -351,6 +351,8 @@ const uint16_t PROGMEM combo17[] = {LCTL(KC_EQL), LCTL(KC_0), COMBO_END};
 const uint16_t PROGMEM combo18[] = {LCTL(KC_MINS), LCTL(KC_1), COMBO_END};
 const uint16_t PROGMEM combo19[] = {LCTL(KC_EQL), LCTL(KC_MINS), COMBO_END};
 const uint16_t PROGMEM combo20[] = {LCTL(KC_0), LCTL(KC_1), COMBO_END};
+const uint16_t PROGMEM combo21[] = {TD(TD_F_F5), TD(TD_MP_GU), TD(TD_C_MYCM), COMBO_END};
+const uint16_t PROGMEM combo22[] = {TD(TD_MR_LS_GL), TD(TD_MF_LV_GR), COMBO_END};
 
 combo_t key_combos[] = {
   COMBO(combo0, KC_DEL),
@@ -375,6 +377,8 @@ combo_t key_combos[] = {
   COMBO(combo18, KC_END),
   COMBO(combo19, KC_PGUP),
   COMBO(combo20, KC_PGDN),
+  COMBO(combo21, KC_WWW_HOME),
+  COMBO(combo22, RCS(KC_T)),
 };
 
 
