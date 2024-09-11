@@ -25,6 +25,7 @@ typedef struct {
 
 enum { // add any other tap dance keys to this enum
     TD_EGUI,
+    TD_HM_WWW,
     TD_MR_GL,
     TD_MF_GR,
     TD_MP_GU,
@@ -33,6 +34,7 @@ enum { // add any other tap dance keys to this enum
 
 /* Declare the functions to be used with your tap dance key(s)
 TD_EGUI is Single-Tap = ESC, Hold = LGUI, Double-Tap = LGUI+H, Double-Hold = PSCR
+TD_HM_WWW is Single-Tap = Home, Hold = layer1, Double-Tap = KC_WWW_HOME
 TD_MR_GL is Single-Tap = KC_MRWD, Hold = Left, Double-Tap = GUI+Left, Double-Hold = GUI+CTL+Left
 TD_MF_GR is Single-Tap = KC_MFFD, Hold = Right, Double-Tap = GUI+Right, Double-Hold = GUI+CTL+Right
 TD_MP_GU is Single-Tap = KC_MPRV, Hold = Up, Double-Tap = GUI+Up, Double-Hold = GUI+CTL+D
@@ -91,6 +93,42 @@ void at_reset(tap_dance_state_t *state, void *user_data) {
         unregister_code(KC_LGUI);
     }
     egui_tap_state.state = TD_NONE;
+}
+
+// Functions associated with TD_HM_WWW tap dances
+void bt_finished(tap_dance_state_t *state, void *user_data);
+void bt_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t www_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void bt_finished(tap_dance_state_t *state, void *user_data) {
+    www_tap_state.state = cur_dance(state);
+    switch (www_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code(KC_HOME);
+            break;
+        case TD_SINGLE_HOLD:
+            layer_on(1);
+            break;
+        case TD_DOUBLE_TAP:
+            tap_code16(KC_WWW_HOME);
+            break;
+        default:
+            break;
+    }
+}
+
+void bt_reset(tap_dance_state_t *state, void *user_data) {
+    // If the key was held down and now is released then switch off the layer
+    if (www_tap_state.state == TD_SINGLE_HOLD) {
+        layer_off(1);
+    }
+    www_tap_state.state = TD_NONE;
 }
 
 // Functions associated with TD_MR_GL tap dances
@@ -273,6 +311,7 @@ void ft_reset(tap_dance_state_t *state, void *user_data) {
 tap_dance_action_t tap_dance_actions[] = {
     // TAP_DANCE Complex one here
     [TD_EGUI] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, at_finished, at_reset),
+    [TD_HM_WWW] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, bt_finished, bt_reset),
     [TD_MR_GL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ct_finished, ct_reset),
     [TD_MF_GR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dt_finished, dt_reset),
     [TD_MP_GU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, et_finished, et_reset),
@@ -281,8 +320,8 @@ tap_dance_action_t tap_dance_actions[] = {
 
 
 // Combos setting by Takating 20240910
-const uint16_t PROGMEM combo0[] = {TD(TD_EGUI), LT(1,KC_1), COMBO_END};
-const uint16_t PROGMEM combo0b[] = {KC_BSPC, LT(1,KC_HOME), COMBO_END};
+const uint16_t PROGMEM combo0[] = {TD(TD_EGUI), LT(1,KC_Q), COMBO_END};
+const uint16_t PROGMEM combo0b[] = {KC_BSPC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo1[] = {TD(TD_MR_GL), TD(TD_MN_GD), COMBO_END};
 const uint16_t PROGMEM combo2[] = {TD(TD_MN_GD), TD(TD_MF_GR), COMBO_END};
 const uint16_t PROGMEM combo3[] = {LT(1,KC_Q), KC_A, COMBO_END};
@@ -296,6 +335,8 @@ const uint16_t PROGMEM combo7[] = {LT(3,KC_Z), LT(1,KC_X), COMBO_END};
 const uint16_t PROGMEM combo7b[] = {MT(MOD_LALT,KC_COMM), LT(2,KC_DOT), COMBO_END};
 const uint16_t PROGMEM combo8[] = {LT(1,KC_X), KC_C, COMBO_END};
 const uint16_t PROGMEM combo8b[] = {LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), COMBO_END};
+const uint16_t PROGMEM combo9[] = {TD(TD_EGUI), LT(1,KC_1), COMBO_END};
+const uint16_t PROGMEM combo9b[] = {KC_BSPC, TD(TD_HM_WWW), COMBO_END};
 
 const uint16_t PROGMEM combo10[] = {KC_D, KC_F, COMBO_END};
 const uint16_t PROGMEM combo10b[] = {LT(3,KC_ENT), KC_RSFT, COMBO_END};
@@ -307,11 +348,9 @@ const uint16_t PROGMEM combo15[] = {KC_E, KC_D, COMBO_END};
 const uint16_t PROGMEM combo16[] = {KC_D, KC_C, COMBO_END};
 const uint16_t PROGMEM combo17[] = {KC_E, LT(3,KC_R), COMBO_END};
 const uint16_t PROGMEM combo18[] = {LT(3,KC_R), KC_T, COMBO_END};
+const uint16_t PROGMEM combo19[] = {LT(1,KC_PGUP), MT(MOD_LGUI,KC_PGDN), COMBO_END};
 
-const uint16_t PROGMEM combo20[] = {LT(1,KC_HOME), LT(1,KC_PGUP), COMBO_END};
-const uint16_t PROGMEM combo20b[] = {LT(1,KC_PGUP), MT(MOD_LGUI,KC_PGDN), COMBO_END};
-const uint16_t PROGMEM combo20c[] = {MT(MOD_LGUI,KC_PGDN), LT(3,KC_END), COMBO_END};
-const uint16_t PROGMEM combo20d[] = {KC_LSFT, KC_RSFT, COMBO_END};
+const uint16_t PROGMEM combo20[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
 const uint16_t PROGMEM combo21[] = {MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), COMBO_END};
 const uint16_t PROGMEM combo21b[] = {LT(1,KC_1), LT(2,KC_2), COMBO_END};
@@ -343,6 +382,8 @@ combo_t key_combos[] = {
   COMBO(combo7b, RSG(KC_LEFT)),
   COMBO(combo8, RSG(KC_RGHT)),
   COMBO(combo8b, RSG(KC_RGHT)),
+  COMBO(combo9, KC_F11),
+  COMBO(combo9b, KC_F11),
 
   COMBO(combo10, LGUI(KC_TAB)),
   COMBO(combo10b, LGUI(KC_TAB)),
@@ -354,11 +395,9 @@ combo_t key_combos[] = {
   COMBO(combo16, LCTL(KC_W)),
   COMBO(combo17, RCS(KC_PGUP)),
   COMBO(combo18, RCS(KC_PGDN)),
+  COMBO(combo19, RCS(KC_T)),
 
-  COMBO(combo20, QK_COMBO_TOGGLE),
-  COMBO(combo20b, QK_COMBO_ON),
-  COMBO(combo20c, QK_COMBO_OFF),
-  COMBO(combo20d, KC_CAPS),
+  COMBO(combo20, KC_CAPS),
 
   COMBO(combo21, LSA(KC_7)),
   COMBO(combo21b, LSA(KC_7)),
@@ -380,7 +419,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	// Default layer
 	[0] = LAYOUT_all(
-		TD(TD_EGUI), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LSFT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), KC_BSPC, KC_BSPC, LT(1,KC_HOME),
+		TD(TD_EGUI), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LSFT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), KC_BSPC, KC_BSPC, TD(TD_HM_WWW),
 		LT(2,KC_TAB), LT(1,KC_Q), KC_W, KC_E, LT(3,KC_R), KC_T, LT(2,KC_Y), KC_U, LT(3,KC_I), KC_O, LT(2,KC_P), KC_LBRC, KC_RBRC, LT(2,KC_BSLS), LT(1,KC_PGUP),
 		LT(3,KC_GRV), KC_A, KC_S, KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, KC_K, KC_L, LT(3,KC_SCLN), MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN),
 		KC_LSFT, KC_LSFT, LT(3,KC_Z), LT(1,KC_X), KC_C, LT(2,KC_V), LT(3,KC_B), KC_N, KC_M, MT(MOD_LALT,KC_COMM), LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), KC_RSFT, KC_UP, LT(3,KC_END),
@@ -389,9 +428,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	// Fn1 Layer
 	[1] = LAYOUT_all(
-		KC_F11, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, KC_MUTE,
-		LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_RGHT)), LGUI(KC_UP), LALT(KC_ESC), LSA(KC_ESC), LCTL(KC_T), RCS(KC_PGUP), RCS(KC_PGDN), LCTL(LGUI(KC_D)), KC_TRNS, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), KC_VOLU,
-		KC_CAPS, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RGHT), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), RCS(KC_LEFT), RCS(KC_RGHT), LGUI(KC_TAB), KC_VOLD,
+		QK_COMBO_TOGGLE, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
+		LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_RGHT)), LGUI(KC_UP), LALT(KC_ESC), LSA(KC_ESC), LCTL(KC_T), RCS(KC_PGUP), RCS(KC_PGDN), LCTL(LGUI(KC_D)), KC_TRNS, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), QK_COMBO_ON,
+		KC_CAPS, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RGHT), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), RCS(KC_LEFT), RCS(KC_RGHT), LGUI(KC_TAB), QK_COMBO_OFF,
 		LSA(KC_P), KC_TRNS, RSG(KC_LEFT), RSG(KC_RGHT), MEH(KC_TAB), LCA(KC_TAB), LGUI(KC_TAB), LCTL(KC_N), LGUI(KC_C), LALT(KC_ESC), LSA(KC_ESC), RSG(KC_LEFT), RSG(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
 		LALT(KC_ENT), KC_F5, LGUI(KC_H), LGUI(KC_D), LGUI(KC_D), LGUI(KC_D), KC_PSCR, KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
     ),
