@@ -343,11 +343,18 @@ const uint16_t PROGMEM combo10b[] = {LT(3,KC_ENT), KC_RSFT, COMBO_END};
 const uint16_t PROGMEM combo11[] = {LT(1,KC_Q), KC_W, COMBO_END};
 const uint16_t PROGMEM combo12[] = {KC_W, KC_E, COMBO_END};
 const uint16_t PROGMEM combo13[] = {KC_A, KC_S, COMBO_END};
+const uint16_t PROGMEM combo13b[] = {KC_LEFT, KC_DOWN, COMBO_END};
 const uint16_t PROGMEM combo14[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM combo14b[] = {KC_DOWN, KC_RGHT, COMBO_END};
 const uint16_t PROGMEM combo15[] = {KC_E, KC_D, COMBO_END};
+const uint16_t PROGMEM combo15b[] = {KC_UP, KC_DOWN, COMBO_END};
 const uint16_t PROGMEM combo16[] = {KC_D, KC_C, COMBO_END};
-const uint16_t PROGMEM combo17[] = {KC_E, LT(3,KC_R), COMBO_END};
-const uint16_t PROGMEM combo18[] = {LT(3,KC_R), KC_T, COMBO_END};
+const uint16_t PROGMEM combo16b[] = {KC_LEFT, KC_RGHT, COMBO_END};
+const uint16_t PROGMEM combo17[] = {KC_A, LT(3,KC_Z), COMBO_END};
+const uint16_t PROGMEM combo17b[] = {KC_RSFT, KC_UP, COMBO_END};
+const uint16_t PROGMEM combo18[] = {KC_S, LT(1,KC_X), COMBO_END};
+const uint16_t PROGMEM combo18b[] = {KC_UP, LT(3,KC_END), COMBO_END};
+
 const uint16_t PROGMEM combo19[] = {LT(1,KC_PGUP), MT(MOD_LGUI,KC_PGDN), COMBO_END};
 
 const uint16_t PROGMEM combo20[] = {KC_LSFT, KC_RSFT, COMBO_END};
@@ -390,11 +397,17 @@ combo_t key_combos[] = {
   COMBO(combo11, LALT(KC_ESC)),
   COMBO(combo12, LSA(KC_ESC)),
   COMBO(combo13, LCTL(KC_PGUP)),
+  COMBO(combo13b, LCTL(KC_PGUP)),
   COMBO(combo14, LCTL(KC_PGDN)),
+  COMBO(combo14b, LCTL(KC_PGDN)),
   COMBO(combo15, LCTL(KC_T)),
+  COMBO(combo15b, LCTL(KC_T)),
   COMBO(combo16, LCTL(KC_W)),
+  COMBO(combo16b, LCTL(KC_W)),
   COMBO(combo17, RCS(KC_PGUP)),
+  COMBO(combo17b, RCS(KC_PGUP)),
   COMBO(combo18, RCS(KC_PGDN)),
+  COMBO(combo18b, RCS(KC_PGDN)),
   COMBO(combo19, RCS(KC_T)),
 
   COMBO(combo20, KC_CAPS),
@@ -421,7 +434,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_all(
 		TD(TD_EGUI), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LSFT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), KC_BSPC, KC_BSPC, TD(TD_HM_WWW),
 		LT(2,KC_TAB), LT(1,KC_Q), KC_W, KC_E, LT(3,KC_R), KC_T, LT(2,KC_Y), KC_U, LT(3,KC_I), KC_O, LT(2,KC_P), KC_LBRC, KC_RBRC, LT(2,KC_BSLS), LT(1,KC_PGUP),
-		LT(3,KC_GRV), KC_A, KC_S, KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, KC_K, KC_L, LT(3,KC_SCLN), MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN),
+		LT(3,KC_GRV), KC_A, KC_S, KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, LT(1,KC_K), KC_L, LT(3,KC_SCLN), MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN),
 		KC_LSFT, KC_LSFT, LT(3,KC_Z), LT(1,KC_X), KC_C, LT(2,KC_V), LT(3,KC_B), KC_N, KC_M, MT(MOD_LALT,KC_COMM), LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), KC_RSFT, KC_UP, LT(3,KC_END),
 		MT(MOD_LCTL,KC_PDOT), LT(2,KC_BSPC), MT(MOD_LALT,KC_ESC), LT(1,KC_SPC), LT(1,KC_SPC), LT(1,KC_SPC), KC_RALT, LT(2,KC_ESC), KC_LEFT, KC_DOWN, KC_RGHT
 	),
