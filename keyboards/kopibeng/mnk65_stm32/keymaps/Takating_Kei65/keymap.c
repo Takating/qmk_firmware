@@ -320,14 +320,14 @@ tap_dance_action_t tap_dance_actions[] = {
 
 
 // Combos setting by Takating 20240910
-const uint16_t PROGMEM combo0[] = {TD(TD_EGUI), LT(1,KC_Q), COMBO_END};
-const uint16_t PROGMEM combo1[] = {KC_BSPC, KC_RBRC, COMBO_END};
+const uint16_t PROGMEM combo0[] = {TD(TD_EGUI), LT(1,KC_1), COMBO_END};
+const uint16_t PROGMEM combo1[] = {KC_BSPC, TD(TD_HM_WWW), COMBO_END};
 const uint16_t PROGMEM combo2[] = {TD(TD_MR_GL), TD(TD_MN_GD), COMBO_END};
 const uint16_t PROGMEM combo3[] = {TD(TD_MN_GD), TD(TD_MF_GR), COMBO_END};
-const uint16_t PROGMEM combo4[] = {LT(1,KC_Q), KC_A, COMBO_END};
+const uint16_t PROGMEM combo4[] = {KC_W, KC_S, COMBO_END};
 const uint16_t PROGMEM combo5[] = {LT(2,KC_BSLS), LT(3,KC_ENT), COMBO_END};
 const uint16_t PROGMEM combo6[] = {KC_RBRC, MT(MOD_LCTL,KC_QUOT), COMBO_END};
-const uint16_t PROGMEM combo7[] = {LT(2,KC_TAB), LT(3,KC_GRV), COMBO_END};
+const uint16_t PROGMEM combo7[] = {LT(1,KC_Q), KC_A, COMBO_END};
 const uint16_t PROGMEM combo8[] = {LT(2,KC_TAB), LT(1,KC_Q), COMBO_END};
 const uint16_t PROGMEM combo9[] = {KC_LBRC, KC_RBRC, COMBO_END};
 const uint16_t PROGMEM combo10[] = {KC_RBRC, LT(2,KC_BSLS), COMBO_END};
@@ -335,14 +335,14 @@ const uint16_t PROGMEM combo11[] = {LT(3,KC_Z), LT(1,KC_X), COMBO_END};
 const uint16_t PROGMEM combo12[] = {MT(MOD_LALT,KC_COMM), LT(2,KC_DOT), COMBO_END};
 const uint16_t PROGMEM combo13[] = {LT(1,KC_X), KC_C, COMBO_END};
 const uint16_t PROGMEM combo14[] = {LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), COMBO_END};
-const uint16_t PROGMEM combo15[] = {TD(TD_EGUI), LT(1,KC_1), COMBO_END};
-const uint16_t PROGMEM combo16[] = {KC_BSPC, TD(TD_HM_WWW), COMBO_END};
+const uint16_t PROGMEM combo15[] = {LT(3,KC_Z), MT(MOD_LALT,KC_ESC), COMBO_END};
+const uint16_t PROGMEM combo16[] = {TD(TD_HM_WWW), LT(1,KC_PGUP), COMBO_END};
 const uint16_t PROGMEM combo17[] = {LT(1,KC_PGUP), MT(MOD_LGUI,KC_PGDN), COMBO_END};
 const uint16_t PROGMEM combo18[] = {MT(MOD_LGUI,KC_PGDN), LT(3,KC_END), COMBO_END};
 const uint16_t PROGMEM combo19[] = {KC_LSFT, KC_RSFT, COMBO_END};
 
-const uint16_t PROGMEM combo20[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM combo21[] = {MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), COMBO_END};
+const uint16_t PROGMEM combo20[] = {LT(3,KC_GRV), KC_A, COMBO_END};
+const uint16_t PROGMEM combo21[] = {LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN), COMBO_END};
 const uint16_t PROGMEM combo22[] = {LT(1,KC_Q), KC_W, COMBO_END};
 const uint16_t PROGMEM combo23[] = {KC_W, KC_E, COMBO_END};
 const uint16_t PROGMEM combo24[] = {KC_A, KC_S, COMBO_END};
@@ -358,9 +358,9 @@ const uint16_t PROGMEM combo33[] = {KC_RSFT, KC_UP, COMBO_END};
 const uint16_t PROGMEM combo34[] = {KC_S, LT(1,KC_X), COMBO_END};
 const uint16_t PROGMEM combo35[] = {KC_UP, LT(3,KC_END), COMBO_END};
 
-const uint16_t PROGMEM combo36[] = {LT(3,KC_ENT), KC_RSFT, COMBO_END};
+const uint16_t PROGMEM combo36[] = {MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), COMBO_END};
 const uint16_t PROGMEM combo37[] = {LT(1,KC_1), LT(2,KC_2), COMBO_END};
-const uint16_t PROGMEM combo38[] = {KC_RSFT, LT(2,KC_ESC), COMBO_END};
+const uint16_t PROGMEM combo38[] = {LT(3,KC_ENT), KC_RSFT, COMBO_END};
 const uint16_t PROGMEM combo39[] = {LT(2,KC_2), MT(MOD_LCTL,KC_3), COMBO_END};
 const uint16_t PROGMEM combo40[] = {LT(2,KC_2), MT(MOD_LCTL,KC_3), KC_E, COMBO_END};
 const uint16_t PROGMEM combo41[] = {MT(MOD_LCTL,KC_QUOT), MT(MOD_LCTL,KC_SLSH), COMBO_END};
@@ -370,18 +370,26 @@ const uint16_t PROGMEM combo44[] = {MT(MOD_LCTL,KC_SLSH), LT(2,KC_ESC), COMBO_EN
 const uint16_t PROGMEM combo45[] = {MT(MOD_LALT,KC_ESC), LT(1,KC_SPC), COMBO_END};
 const uint16_t PROGMEM combo46[] = {LT(1,KC_SPC), LT(2,KC_ESC), COMBO_END};
 const uint16_t PROGMEM combo47[] = {LT(2,KC_BSPC), MT(MOD_LALT,KC_ESC), COMBO_END};
-const uint16_t PROGMEM combo48[] = {KC_LEFT, KC_DOWN, KC_RGHT, COMBO_END};
+const uint16_t PROGMEM combo48[] = {KC_RSFT, LT(2,KC_ESC), COMBO_END};
 
-const uint16_t PROGMEM combo49[] = {LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN), COMBO_END};
-const uint16_t PROGMEM combo50[] = {LT(3,KC_GRV), KC_A, COMBO_END};
+const uint16_t PROGMEM combo49[] = {LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN), KC_RSFT, COMBO_END};
+const uint16_t PROGMEM combo50[] = {LT(3,KC_GRV), KC_A, LT(3,KC_Z), COMBO_END};
 const uint16_t PROGMEM combo51[] = {LT(2,KC_BSLS), LT(1,KC_PGUP), COMBO_END};
 const uint16_t PROGMEM combo52[] = {KC_S, KC_D, KC_C, COMBO_END};
 const uint16_t PROGMEM combo53[] = {KC_D, KC_F, LT(2,KC_V), COMBO_END};
 
 const uint16_t PROGMEM combo54[] = {TD(TD_EGUI), LT(2,KC_TAB), COMBO_END};
-const uint16_t PROGMEM combo55[] = {LT(1,KC_1), LT(1,KC_Q), COMBO_END};
-const uint16_t PROGMEM combo56[] = {LT(2,KC_2), KC_W, COMBO_END};
-const uint16_t PROGMEM combo57[] = {MT(MOD_LCTL,KC_3), KC_E, COMBO_END};
+const uint16_t PROGMEM combo55[] = {LT(2,KC_TAB), LT(3,KC_GRV), COMBO_END};
+const uint16_t PROGMEM combo56[] = {LT(3,KC_GRV), KC_LSFT, COMBO_END};
+const uint16_t PROGMEM combo57[] = {KC_LSFT, LT(2,KC_BSPC), COMBO_END};
+
+const uint16_t PROGMEM combo58[] = {LT(1,KC_1), LT(1,KC_Q), COMBO_END};
+const uint16_t PROGMEM combo59[] = {LT(2,KC_2), KC_W, COMBO_END};
+
+const uint16_t PROGMEM combo60[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM combo61[] = {KC_F, LT(1,KC_G), COMBO_END};
+const uint16_t PROGMEM combo62[] = {LT(3,KC_R), KC_F, COMBO_END};
+const uint16_t PROGMEM combo63[] = {KC_F, LT(2,KC_V), COMBO_END};
 
 combo_t key_combos[] = {
   COMBO(combo0, KC_DEL),
@@ -442,10 +450,18 @@ combo_t key_combos[] = {
   COMBO(combo52, LCTL(KC_C)),
   COMBO(combo53, LCTL(KC_V)),
 
-  COMBO(combo54, RCS(KC_UP)),
-  COMBO(combo55, LCTL(KC_LEFT)),
-  COMBO(combo56, LCTL(KC_RGHT)),
-  COMBO(combo57, RCS(KC_DOWN)),
+  COMBO(combo54, KC_HOME),
+  COMBO(combo55, KC_PGUP),
+  COMBO(combo56, KC_PGDN),
+  COMBO(combo57, KC_END),
+
+  COMBO(combo58, LCTL(LGUI(KC_LEFT))),
+  COMBO(combo59, LCTL(LGUI(KC_RGHT))),
+
+  COMBO(combo60, KC_LEFT),
+  COMBO(combo61, KC_RGHT),
+  COMBO(combo62, KC_UP),
+  COMBO(combo63, KC_DOWN),
 };
 
 
@@ -462,7 +478,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	// Fn1 Layer
 	[1] = LAYOUT_all(
-		QK_COMBO_TOGGLE, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
+		KC_F11, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
 		LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_RGHT)), LGUI(KC_UP), LALT(KC_ESC), LSA(KC_ESC), LCTL(KC_T), RCS(KC_PGUP), RCS(KC_PGDN), LCTL(LGUI(KC_D)), KC_TRNS, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), QK_COMBO_ON,
 		KC_CAPS, LGUI(KC_LEFT), LGUI(KC_DOWN), LGUI(KC_RGHT), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), RCS(KC_LEFT), RCS(KC_RGHT), LGUI(KC_TAB), QK_COMBO_OFF,
 		LSA(KC_P), KC_TRNS, RSG(KC_LEFT), RSG(KC_RGHT), MEH(KC_TAB), LCA(KC_TAB), LGUI(KC_TAB), LCTL(KC_N), LGUI(KC_C), LALT(KC_ESC), LSA(KC_ESC), RSG(KC_LEFT), RSG(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
