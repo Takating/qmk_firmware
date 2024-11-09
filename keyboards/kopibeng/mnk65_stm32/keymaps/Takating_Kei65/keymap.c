@@ -345,10 +345,10 @@ void ht_finished(tap_dance_state_t *state, void *user_data) {
             tap_code16(LSA(KC_7));
             break;
         case TD_SINGLE_HOLD:
-            tap_code(KC_F5);
+            tap_code16(LGUI(KC_Z));
             break;
         case TD_DOUBLE_TAP:
-            tap_code16(LGUI(KC_Z));
+            tap_code(KC_F5);
             break;
         default:
             break;
@@ -797,7 +797,7 @@ const uint16_t PROGMEM combo13[] = {LT(3,KC_Z), MT(MOD_LALT,KC_ESC), COMBO_END};
 const uint16_t PROGMEM combo14[] = {MT(MOD_LCTL,KC_SLSH), LT(2,KC_ESC), COMBO_END};
 const uint16_t PROGMEM combo15[] = {LT(1,KC_PGUP), MT(MOD_LGUI,KC_PGDN), COMBO_END};
 
-const uint16_t PROGMEM combo16[] = {MT(MOD_LGUI,KC_PGDN), LT(3,KC_END), COMBO_END};
+const uint16_t PROGMEM combo16[] = {KC_LSFT, LT(3,KC_Z), COMBO_END};
 const uint16_t PROGMEM combo17[] = {LT(2,KC_BSLS), TD(TD_HM_WWW), COMBO_END};
 const uint16_t PROGMEM combo18[] = {LT(3,KC_GRV), KC_A, COMBO_END};
 const uint16_t PROGMEM combo19[] = {LT(3,KC_ENT), MT(MOD_LGUI,KC_PGDN), COMBO_END};
@@ -884,7 +884,7 @@ COMBO(combo12, RSG(KC_RGHT)),
 COMBO(combo13, TD(TD_F119_GH)),
 COMBO(combo14, TD(TD_F119_GH)),
 COMBO(combo15, RCS(KC_T)),
-COMBO(combo16, KC_MUTE),
+COMBO(combo16, LGUI(KC_Z)),
 COMBO(combo17, KC_MYCM),
 
 COMBO(combo18, TD(TD_WADD_TSK_CPS)),
