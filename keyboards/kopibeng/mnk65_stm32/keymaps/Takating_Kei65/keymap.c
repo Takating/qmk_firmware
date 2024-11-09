@@ -15,7 +15,8 @@ typedef enum {
     TD_SINGLE_TAP,
     TD_SINGLE_HOLD,
     TD_DOUBLE_TAP,
-    TD_DOUBLE_HOLD
+    TD_DOUBLE_HOLD,
+    TD_DOUBLE_SINGLE_TAP
 } td_state_t;
 
 typedef struct {
@@ -39,6 +40,10 @@ enum { // add any other tap dance keys to this enum
     TD_NTB_AU,
     TD_CTB_AD,
     TD_F119_GH,
+    TD_SF1_VWL,
+    TD_SF2_VWR,
+    TD_MINS_VWL,
+    TD_EQL_VWR,
 };
 
 /* Declare the functions to be used with your tap dance key(s)
@@ -59,11 +64,17 @@ enum { // add any other tap dance keys to this enum
 [TD_NTB_AU] is Single-Tap = CTL+T, Hold = same, Double-Tap = ALT+Up
 [TD_CTB_AD] is Single-Tap = CTL+W, Hold = same, Double-Tap = ALT+Down
 
-[TD_F119_GH] is Single-Tap = F11, Double-Tap = F9
+[TD_F119_GH] is Single-Tap = F11, Hold = GUI+H, Double-Tap = F9
+
+[TD_SF1_VWL] is Single-Tap = !, Hold = GUI+CTL+Left, Double-Tap = !!
+[TD_SF2_VWR] is Single-Tap = @, Hold = GUI+CTL+Right, Double-Tap = @@
+[TD_MINS_VWL] is Single-Tap = _, Hold = GUI+CTL+Left, Double-Tap = __
+[TD_EQL_VWR] is Single-Tap = +, Hold = GUI+CTL+Right, Double-Tap = ++
 */
 
 // Function associated with all tap dances
 td_state_t cur_dance(tap_dance_state_t *state);
+td_state_t cur_dance2(tap_dance_state_t *state);
 
 // Functions associated with [TD_EGUI] tap dances
 void at_finished(tap_dance_state_t *state, void *user_data);
@@ -576,6 +587,173 @@ void ot_reset(tap_dance_state_t *state, void *user_data) {
     f119_tap_state.state = TD_NONE;
 };
 
+// Functions associated with [TD_SF1_VWL] tap dances
+void pt_finished(tap_dance_state_t *state, void *user_data);
+void pt_reset(tap_dance_state_t *state, void *user_data);
+
+// Determine the tapdance state to return
+td_state_t cur_dance2(tap_dance_state_t *state) {
+    if (state->count == 1) {
+        if (state->interrupted || !state->pressed) return TD_SINGLE_TAP;
+        else return TD_SINGLE_HOLD;
+    }
+
+    if (state->count == 2) return TD_DOUBLE_SINGLE_TAP;
+    else return TD_UNKNOWN; // Any number higher than the maximum state value you return above
+}
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t sf1_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void pt_finished(tap_dance_state_t *state, void *user_data) {
+    sf1_tap_state.state = cur_dance2(state);
+    switch (sf1_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code16(KC_EXLM);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_LEFT);
+            break;
+        case TD_DOUBLE_SINGLE_TAP: 
+            tap_code16(KC_EXLM);
+            register_code16(KC_EXLM);
+            break;
+        default:
+            break;
+    }
+}
+
+void pt_reset(tap_dance_state_t *state, void *user_data) {
+    if (sf1_tap_state.state == TD_SINGLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
+    }else if (sf1_tap_state.state == TD_DOUBLE_SINGLE_TAP) {
+        unregister_code16(KC_EXLM);
+    }
+    sf1_tap_state.state = TD_NONE;
+};
+
+// Functions associated with [TD_SF2_VWR] tap dances
+void qt_finished(tap_dance_state_t *state, void *user_data);
+void qt_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t sf2_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void qt_finished(tap_dance_state_t *state, void *user_data) {
+    sf2_tap_state.state = cur_dance2(state);
+    switch (sf2_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code16(KC_AT);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_RGHT);
+            break;
+        case TD_DOUBLE_SINGLE_TAP: // Allow nesting of 2 parens `((` within tapping term
+            tap_code16(KC_AT);
+            register_code16(KC_AT);
+            break;
+        default:
+            break;
+    }
+}
+
+void qt_reset(tap_dance_state_t *state, void *user_data) {
+    if (sf2_tap_state.state == TD_SINGLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
+    }else if (sf2_tap_state.state == TD_DOUBLE_SINGLE_TAP) {
+        unregister_code16(KC_AT);
+    }
+    sf2_tap_state.state = TD_NONE;
+};
+
+// Functions associated with [TD_MINS_VWL] tap dances
+void rt_finished(tap_dance_state_t *state, void *user_data);
+void rt_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t mins_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void rt_finished(tap_dance_state_t *state, void *user_data) {
+    mins_tap_state.state = cur_dance2(state);
+    switch (mins_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code16(KC_UNDS);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_LEFT);
+            break;
+        case TD_DOUBLE_SINGLE_TAP: // Allow nesting of 2 parens `((` within tapping term
+            tap_code16(KC_UNDS);
+            register_code16(KC_UNDS);
+            break;
+        default:
+            break;
+    }
+}
+
+void rt_reset(tap_dance_state_t *state, void *user_data) {
+    if (mins_tap_state.state == TD_SINGLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
+    }else if (mins_tap_state.state == TD_DOUBLE_SINGLE_TAP) {
+        unregister_code16(KC_UNDS);
+    }
+    mins_tap_state.state = TD_NONE;
+};
+
+// Functions associated with [TD_EQL_VWR] tap dances
+void st_finished(tap_dance_state_t *state, void *user_data);
+void st_reset(tap_dance_state_t *state, void *user_data);
+
+// Initialize tap structure associated with this tap dance key
+static td_tap_t eql_tap_state = {
+    .is_press_action = true,
+    .state = TD_NONE
+};
+
+// Functions that control what our tap dance key does
+void st_finished(tap_dance_state_t *state, void *user_data) {
+    eql_tap_state.state = cur_dance2(state);
+    switch (eql_tap_state.state) {
+        case TD_SINGLE_TAP:
+            tap_code16(KC_PLUS);
+            break;
+        case TD_SINGLE_HOLD:
+            register_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI));
+            tap_code(KC_RGHT);
+            break;
+        case TD_DOUBLE_SINGLE_TAP: // Allow nesting of 2 parens `((` within tapping term
+            tap_code16(KC_PLUS);
+            register_code16(KC_PLUS);
+            break;
+        default:
+            break;
+    }
+}
+
+void st_reset(tap_dance_state_t *state, void *user_data) {
+    if (eql_tap_state.state == TD_SINGLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL) | MOD_BIT(KC_LGUI)); 
+    }else if (eql_tap_state.state == TD_DOUBLE_SINGLE_TAP) {
+        unregister_code16(KC_PLUS);
+    }
+    eql_tap_state.state = TD_NONE;
+};
+
 // Associate our tap dance key with its functionality
 tap_dance_action_t tap_dance_actions[] = {
 // TAP_DANCE Complex one here
@@ -594,6 +772,10 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_NTB_AU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, mt_finished, mt_reset),
     [TD_CTB_AD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, nt_finished, nt_reset),
     [TD_F119_GH] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ot_finished, ot_reset),
+    [TD_SF1_VWL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, pt_finished, pt_reset),
+    [TD_SF2_VWR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, qt_finished, qt_reset),
+    [TD_MINS_VWL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rt_finished, rt_reset),
+    [TD_EQL_VWR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, st_finished, st_reset),
 };
 
 
@@ -657,20 +839,33 @@ const uint16_t PROGMEM combo50[] = {LT(2,KC_TAB), LT(3,KC_GRV), COMBO_END};
 
 const uint16_t PROGMEM combo51[] = {LT(3,KC_GRV), KC_LSFT, COMBO_END};
 const uint16_t PROGMEM combo52[] = {KC_LSFT, LT(2,KC_BSPC), COMBO_END};
-const uint16_t PROGMEM combo53[] = {LT(1,KC_1), LT(1,KC_Q), COMBO_END};
-const uint16_t PROGMEM combo54[] = {MT(MOD_LCTL,KC_MINS), LT(2,KC_P), COMBO_END};
-const uint16_t PROGMEM combo55[] = {LT(2,KC_2), LT(3,KC_W), COMBO_END};
-const uint16_t PROGMEM combo56[] = {MT(MOD_LSFT,KC_EQL), KC_LBRC, COMBO_END};
 
-const uint16_t PROGMEM combo57[] = {KC_D, KC_F, COMBO_END};
-const uint16_t PROGMEM combo58[] = {KC_F, LT(1,KC_G), COMBO_END};
-const uint16_t PROGMEM combo59[] = {LT(3,KC_R), KC_F, COMBO_END};
-const uint16_t PROGMEM combo60[] = {KC_F, LT(2,KC_V), COMBO_END};
+const uint16_t PROGMEM combo53[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM combo54[] = {KC_F, LT(1,KC_G), COMBO_END};
+const uint16_t PROGMEM combo55[] = {LT(3,KC_R), KC_F, COMBO_END};
+const uint16_t PROGMEM combo56[] = {KC_F, LT(2,KC_V), COMBO_END};
 
-const uint16_t PROGMEM combo61[] = {KC_J, KC_M, COMBO_END};
-const uint16_t PROGMEM combo62[] = {KC_U, KC_J, COMBO_END};
-const uint16_t PROGMEM combo63[] = {KC_H, KC_J, COMBO_END};
-const uint16_t PROGMEM combo64[] = {KC_J, LT(1,KC_K), COMBO_END};
+const uint16_t PROGMEM combo57[] = {KC_J, KC_M, COMBO_END};
+const uint16_t PROGMEM combo58[] = {KC_U, KC_J, COMBO_END};
+const uint16_t PROGMEM combo59[] = {KC_H, KC_J, COMBO_END};
+const uint16_t PROGMEM combo60[] = {KC_J, LT(1,KC_K), COMBO_END};
+
+const uint16_t PROGMEM combo61[] = {LT(1,KC_1), LT(1,KC_Q), COMBO_END};
+const uint16_t PROGMEM combo62[] = {LT(2,KC_2), LT(3,KC_W), COMBO_END};
+const uint16_t PROGMEM combo63[] = {MT(MOD_LCTL,KC_3), KC_E, COMBO_END};
+const uint16_t PROGMEM combo64[] = {MT(MOD_LSFT,KC_4), LT(3,KC_R), COMBO_END};
+const uint16_t PROGMEM combo65[] = {MT(MOD_LSFT,KC_5), KC_T, COMBO_END};
+const uint16_t PROGMEM combo66[] = {MT(MOD_LGUI,KC_6), LT(2,KC_Y), COMBO_END};
+const uint16_t PROGMEM combo67[] = {KC_7, KC_U, COMBO_END};
+const uint16_t PROGMEM combo68[] = {KC_8, LT(3,KC_I), COMBO_END};
+const uint16_t PROGMEM combo69[] = {KC_9, LT(3,KC_I), COMBO_END};
+const uint16_t PROGMEM combo70[] = {LT(1,KC_0), KC_O, COMBO_END};
+const uint16_t PROGMEM combo71[] = {MT(MOD_LCTL,KC_MINS), LT(2,KC_P), COMBO_END};
+const uint16_t PROGMEM combo72[] = {MT(MOD_LSFT,KC_EQL), KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo73[] = {KC_9, KC_O, COMBO_END};
+const uint16_t PROGMEM combo74[] = {LT(1,KC_0), LT(2,KC_P), COMBO_END};
+const uint16_t PROGMEM combo75[] = {MT(MOD_LCTL,KC_MINS), KC_LBRC, COMBO_END};
+const uint16_t PROGMEM combo76[] = {MT(MOD_LSFT,KC_EQL), KC_RBRC, COMBO_END};
 
 combo_t key_combos[] = {
 COMBO(combo0, KC_DEL),
@@ -731,20 +926,32 @@ COMBO(combo50, KC_PGUP),
 COMBO(combo51, KC_PGDN),
 COMBO(combo52, KC_END),
 
-COMBO(combo53, LCTL(LGUI(KC_LEFT))),
-COMBO(combo54, LCTL(LGUI(KC_LEFT))),
-COMBO(combo55, LCTL(LGUI(KC_RGHT))),
-COMBO(combo56, LCTL(LGUI(KC_RGHT))),
+COMBO(combo53, KC_LEFT),
+COMBO(combo54, KC_RGHT),
+COMBO(combo55, KC_UP),
+COMBO(combo56, KC_DOWN),
 
-COMBO(combo57, KC_LEFT),
-COMBO(combo58, KC_RGHT),
-COMBO(combo59, KC_UP),
-COMBO(combo60, KC_DOWN),
+COMBO(combo57, LCTL(KC_MINS)),
+COMBO(combo58, LCTL(KC_EQL)),
+COMBO(combo59, LCTL(KC_0)),
+COMBO(combo60, LCTL(KC_1)),
 
-COMBO(combo61, LCTL(KC_MINS)),
-COMBO(combo62, LCTL(KC_EQL)),
-COMBO(combo63, LCTL(KC_0)),
-COMBO(combo64, LCTL(KC_1)),
+COMBO(combo61, TD(TD_SF1_VWL)),
+COMBO(combo62, TD(TD_SF2_VWR)),
+COMBO(combo63, KC_HASH),
+COMBO(combo64, KC_DLR),
+COMBO(combo65, KC_PERC),
+COMBO(combo66, KC_CIRC),
+COMBO(combo67, KC_AMPR),
+COMBO(combo68, KC_ASTR),
+COMBO(combo69, KC_LPRN),
+COMBO(combo70, KC_RPRN),
+COMBO(combo71, TD(TD_MINS_VWL)),
+COMBO(combo72, TD(TD_EQL_VWR)),
+COMBO(combo73, KC_LPRN),
+COMBO(combo74, KC_RPRN),
+COMBO(combo75, TD(TD_MINS_VWL)),
+COMBO(combo76, TD(TD_EQL_VWR)),
 };
 
 
