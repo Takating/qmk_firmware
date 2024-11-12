@@ -45,7 +45,7 @@ enum { // add any other tap dance keys to this enum
     TD_MINS_VWL,
     TD_EQL_VWR,
     TD_PU_HM_L1,
-    TD_GD_ED_GU,
+    TD_PD_ED_CL,
     TD_PL_F_C,
 };
 
@@ -70,7 +70,7 @@ enum { // add any other tap dance keys to this enum
 [TD_F119_GH] is Single-Tap = F11, Hold = GUI+H, Double-Tap = F9
 
 [TD_PU_HM_L1] is Single-Tap = PageUp, Hold = Layer1, Double-Tap = Home
-[TD_GD_ED_GU] is Single-Tap = PageDown, Hold = GUI, Double-Tap = End
+[TD_PD_ED_CL] is Single-Tap = PageDown, Hold = CTL, Double-Tap = End
 [TD_PL_F_C] is Single-Tap = MediaPlay, Hold = F, Double-Tap = C
 
 [TD_SF1_VWL] is Single-Tap = !, Hold = GUI+CTL+Left, Double-Tap = !!
@@ -629,25 +629,25 @@ void o2t_reset(tap_dance_state_t *state, void *user_data) {
     ph1_tap_state.state = TD_NONE;
 };
 
-// Functions associated with [TD_PD_ED_GU] tap dances
+// Functions associated with [TD_PD_ED_CL] tap dances
 void o3t_finished(tap_dance_state_t *state, void *user_data);
 void o3t_reset(tap_dance_state_t *state, void *user_data);
 
 // Initialize tap structure associated with this tap dance key
-static td_tap_t pdg_tap_state = {
+static td_tap_t pdc_tap_state = {
     .is_press_action = true,
     .state = TD_NONE
 };
 
 // Functions that control what our tap dance key does
 void o3t_finished(tap_dance_state_t *state, void *user_data) {
-    pdg_tap_state.state = cur_dance(state);
-    switch (pdg_tap_state.state) {
+    pdc_tap_state.state = cur_dance(state);
+    switch (pdc_tap_state.state) {
         case TD_SINGLE_TAP:
             tap_code(KC_PGDN);
             break;
         case TD_SINGLE_HOLD:
-            register_mods(MOD_BIT(KC_LGUI));
+            register_mods(MOD_BIT(KC_LCTL));
             break;
         case TD_DOUBLE_TAP:
             tap_code(KC_END);
@@ -658,10 +658,10 @@ void o3t_finished(tap_dance_state_t *state, void *user_data) {
 }
 
 void o3t_reset(tap_dance_state_t *state, void *user_data) {
-    if (pdg_tap_state.state == TD_SINGLE_HOLD) {
-        unregister_mods(MOD_BIT(KC_LGUI));
+    if (pdc_tap_state.state == TD_SINGLE_HOLD) {
+        unregister_mods(MOD_BIT(KC_LCTL));
     }
-    pdg_tap_state.state = TD_NONE;
+    pdc_tap_state.state = TD_NONE;
 };
 
 // Functions associated with [TD_PL_F_C] tap dances
@@ -884,7 +884,7 @@ tap_dance_action_t tap_dance_actions[] = {
     [TD_CTB_AD] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, nt_finished, nt_reset),
     [TD_F119_GH] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, ot_finished, ot_reset),
     [TD_PU_HM_L1] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, o2t_finished, o2t_reset),
-    [TD_GD_ED_GU] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, o3t_finished, o3t_reset),
+    [TD_PD_ED_CL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, o3t_finished, o3t_reset),
     [TD_PL_F_C] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, o4t_finished, o4t_reset),
     [TD_SF1_VWL] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, pt_finished, pt_reset),
     [TD_SF2_VWR] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, qt_finished, qt_reset),
@@ -909,7 +909,7 @@ const uint16_t PROGMEM combo11[] = {LT(1,KC_X), KC_C, COMBO_END};
 const uint16_t PROGMEM combo12[] = {LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), COMBO_END};
 const uint16_t PROGMEM combo13[] = {LT(3,KC_Z), MT(MOD_LALT,KC_ESC), COMBO_END};
 const uint16_t PROGMEM combo14[] = {MT(MOD_LCTL,KC_SLSH), LT(2,KC_ESC), COMBO_END};
-const uint16_t PROGMEM combo15[] = {TD(TD_PU_HM_L1), TD(TD_GD_ED_GU), COMBO_END};
+const uint16_t PROGMEM combo15[] = {TD(TD_PU_HM_L1), TD(TD_PD_ED_CL), COMBO_END};
 const uint16_t PROGMEM combo16[] = {KC_LSFT, LT(3,KC_Z), COMBO_END};
 const uint16_t PROGMEM combo17[] = {LT(2,KC_BSLS), TD(TD_HM_WWW), COMBO_END};
 
@@ -932,7 +932,7 @@ const uint16_t PROGMEM combo33[] = {KC_RSFT, KC_UP, COMBO_END};
 const uint16_t PROGMEM combo34[] = {KC_S, LT(1,KC_X), COMBO_END};
 const uint16_t PROGMEM combo35[] = {KC_UP, LT(3,KC_END), COMBO_END};
 
-const uint16_t PROGMEM combo36[] = {LT(3,KC_ENT), TD(TD_GD_ED_GU), COMBO_END};
+const uint16_t PROGMEM combo36[] = {LT(3,KC_ENT), TD(TD_PD_ED_CL), COMBO_END};
 const uint16_t PROGMEM combo37[] = {TD(TD_EGUI), LT(1,KC_1), COMBO_END};
 const uint16_t PROGMEM combo38[] = {MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), COMBO_END};
 const uint16_t PROGMEM combo39[] = {LT(1,KC_1), LT(2,KC_2), COMBO_END};
@@ -1037,7 +1037,7 @@ COMBO(combo47, LCTL(KC_C)),
 COMBO(combo48, LCTL(KC_V)),
 
 COMBO(combo49, TD(TD_PU_HM_L1)),
-COMBO(combo50, TD(TD_GD_ED_GU)),
+COMBO(combo50, TD(TD_PD_ED_CL)),
 COMBO(combo51, TD(TD_PL_F_C)),
 COMBO(combo52, TD(TD_PL_F_C)),
 
@@ -1079,7 +1079,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_all(
 		TD(TD_EGUI), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LSFT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), KC_BSPC, KC_BSPC, TD(TD_HM_WWW),
 		LT(2,KC_TAB), LT(1,KC_Q), LT(3,KC_W), KC_E, LT(3,KC_R), KC_T, LT(2,KC_Y), KC_U, LT(3,KC_I), KC_O, LT(2,KC_P), KC_LBRC, KC_RBRC, LT(2,KC_BSLS), TD(TD_PU_HM_L1),
-		LT(3,KC_GRV), KC_A, KC_S, KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, LT(1,KC_K), KC_L, LT(3,KC_SCLN), MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), TD(TD_GD_ED_GU),
+		LT(3,KC_GRV), KC_A, KC_S, KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, LT(1,KC_K), KC_L, LT(3,KC_SCLN), MT(MOD_LCTL,KC_QUOT), LT(3,KC_ENT), TD(TD_PD_ED_CL),
 		KC_LSFT, KC_LSFT, LT(3,KC_Z), LT(1,KC_X), KC_C, LT(2,KC_V), LT(3,KC_B), KC_N, KC_M, MT(MOD_LALT,KC_COMM), LT(2,KC_DOT), MT(MOD_LCTL,KC_SLSH), KC_RSFT, KC_UP, LT(3,KC_END),
 		MT(MOD_LCTL,KC_PDOT), LT(2,KC_BSPC), MT(MOD_LALT,KC_ESC), LT(1,KC_SPC), LT(1,KC_SPC), LT(1,KC_SPC), KC_RALT, LT(2,KC_ESC), KC_LEFT, KC_DOWN, KC_RGHT
 	),
