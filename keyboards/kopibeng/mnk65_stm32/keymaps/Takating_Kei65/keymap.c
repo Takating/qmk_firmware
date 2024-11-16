@@ -58,7 +58,7 @@ enum { // add any other tap dance keys to this enum
 [TD_GD_VWC] is Single-Tap = GUI+Down, Hold = same, Double-Tap = GUI+CTL+F4
 
 [TD_WADD_TSK_CPS] is Single-Tap = CTL+L, Hold = GUI+TAB, Double-Tap = Caps
-[TD_ENG_GZ] is Single-Tap = LSA(KC_7), Hold = GUI+Z, Double-Tap = F5
+[TD_ENG_GZ] is Single-Tap = LSA(KC_7), Hold = MouseBt2, Double-Tap = F5
 [TD_CHS_TOG] is Single-Tap = LSA(KC_8), Hold = SFT, Double-Tap = SFT
 [TD_JPN_TOG] is Single-Tap = LSA(KC_9), Hold = ALT+GRV, Double-Tap = ALT+GRV
 
@@ -352,7 +352,7 @@ void ht_finished(tap_dance_state_t *state, void *user_data) {
             tap_code16(LSA(KC_7));
             break;
         case TD_SINGLE_HOLD:
-            tap_code16(LGUI(KC_Z));
+            tap_code(KC_BTN2);
             break;
         case TD_DOUBLE_TAP:
             tap_code(KC_F5);
@@ -1090,10 +1090,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 	// Fn1 Layer
 	[1] = LAYOUT_all(
-		KC_BTN2, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
+		LGUI(KC_Z), KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
 		LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_RGHT)), KC_UP, KC_TRNS, KC_TRNS, LCTL(KC_T), RCS(KC_PGUP), RCS(KC_PGDN), LCTL(LGUI(KC_D)), KC_MYCM, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), QK_COMBO_ON,
 		KC_CAPS, KC_LEFT, KC_DOWN, KC_RGHT, RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), RCS(KC_LEFT), RCS(KC_RGHT), LGUI(KC_TAB), QK_COMBO_OFF,
-		LSA(KC_P), KC_TRNS, RSG(KC_LEFT), RSG(KC_RGHT), MEH(KC_TAB), LCA(KC_TAB), LGUI(KC_TAB), LCTL(KC_N), KC_APP, LALT(KC_ESC), LSA(KC_ESC), RSG(KC_LEFT), RSG(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
+		LSA(KC_P), KC_TRNS, RSG(KC_LEFT), RSG(KC_RGHT), MEH(KC_TAB), LCA(KC_TAB), LGUI(KC_TAB), LCTL(KC_N), KC_BTN2, LALT(KC_ESC), LSA(KC_ESC), RSG(KC_LEFT), RSG(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
 		LALT(KC_ENT), KC_F5, LGUI(KC_H), LGUI(KC_D), LGUI(KC_D), LGUI(KC_D), KC_PSCR, KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
     ),
 
