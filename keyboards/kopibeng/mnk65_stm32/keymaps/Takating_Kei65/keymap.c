@@ -1060,6 +1060,13 @@ const uint16_t PROGMEM combo_rcse_spc[] = {
     COMBO_END
 };
 
+/* Group 60: LGUI(KC_D) */
+const uint16_t PROGMEM combo_lgui_d[] = {
+  MT(MOD_LALT, KC_ESC),
+  LT(2,KC_ESC),
+  COMBO_END
+};
+
 combo_t key_combos[] = {
     COMBO(combo_del_1, KC_DEL),
     COMBO(combo_del_2, KC_DEL),
@@ -1152,6 +1159,7 @@ combo_t key_combos[] = {
     COMBO(combo_p0_rcs_del, TD(TD_P0_RCS_DEL)),
     COMBO(combo_rcsh_spc, TD(TD_RCSH_SPC)),
     COMBO(combo_rcse_spc, TD(TD_RCSE_SPC)),
+    COMBO(combo_lgui_d, LGUI(KC_D)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -1168,7 +1176,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_DOWN, KC_LEFT, KC_RGHT, RCS(KC_PGUP), RCS(KC_PGDN), LCTL(KC_T), KC_TRNS, KC_TRNS, LCTL(LGUI(KC_D)), KC_MYCM, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), QK_COMBO_ON,
 		RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), TD(TD_SELTEX_BFALL), TD(TD_SELTEX_AFALL), LGUI(KC_TAB), QK_COMBO_OFF,
 		LSA(KC_P), KC_TRNS, TD(TD_SELTEX_BFALL), TD(TD_SELTEX_AFALL), LCTL(KC_C), LCTL(KC_V), LGUI(KC_TAB), LCTL(KC_N), KC_APP, LALT(KC_ESC), LSA(KC_ESC), LALT(KC_LEFT), LALT(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
-		LALT(KC_ENT), KC_F5, LGUI(KC_H), LGUI(KC_D), LGUI(KC_D), LGUI(KC_D), KC_PSCR, KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
+		LALT(KC_ENT), KC_F5, LGUI(KC_H), KC_SPC, KC_SPC, KC_SPC, KC_PSCR, KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
     ),
 
 	[2] = LAYOUT_all(
