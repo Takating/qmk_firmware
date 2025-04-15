@@ -426,6 +426,24 @@ void rcse_spc_reset(tap_dance_state_t *s, void *d) {
   rcse_spc_state.state = TD_NONE;
 }
 
+/* TD_ESC_L3_WWW */
+static td_tap_t esc_l3_www_state = INIT_TAP_STATE;
+void esc_l3_www_finished(tap_dance_state_t *state, void *user_data) {
+    esc_l3_www_state.state = cur_dance(state);
+	switch (esc_l3_www_state.state) {
+		case TD_SINGLE_TAP:  tap_code(KC_ESC);   break;
+		case TD_SINGLE_HOLD: layer_on(3);        break;
+		case TD_DOUBLE_TAP:  tap_code16(KC_WWW_HOME);  break;
+		default:                                 break;
+	}
+}
+void esc_l3_www_reset(tap_dance_state_t *state, void *user_data) {
+	if (esc_l3_www_state.state == TD_SINGLE_HOLD) {
+		layer_off(3);
+	}
+	esc_l3_www_state.state = TD_NONE;
+}
+
 enum {
   TD_EGUI_GH = 0,
   TD_HM_WWW,
@@ -453,6 +471,7 @@ enum {
   TD_EQL_VWR,
   TD_RCSH_SPC,
   TD_RCSE_SPC,
+  TD_ESC_L3_WWW,
   TD_SELTEX_BFALL,
   TD_SELTEX_AFALL
 };
@@ -484,6 +503,7 @@ tap_dance_action_t tap_dance_actions[] = {
   [TD_EQL_VWR]       = ACTION_TAP_DANCE_FN_ADVANCED(NULL, eql_vwr_finished, eql_vwr_reset),
   [TD_RCSH_SPC]      = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rcsh_spc_finished, rcsh_spc_reset),
   [TD_RCSE_SPC]      = ACTION_TAP_DANCE_FN_ADVANCED(NULL, rcse_spc_finished, rcse_spc_reset),
+  [TD_ESC_L3_WWW]    = ACTION_TAP_DANCE_FN_ADVANCED(NULL, esc_l3_www_finished, esc_l3_www_reset),
   [TD_SELTEX_BFALL]  = ACTION_TAP_DANCE_DOUBLE(RCS(KC_LEFT), RCS(KC_HOME)),
   [TD_SELTEX_AFALL]  = ACTION_TAP_DANCE_DOUBLE(RCS(KC_RGHT), RCS(KC_END))
 };
@@ -1038,6 +1058,11 @@ const uint16_t PROGMEM combo_lalt_f4[] = {
     TD(TD_PU_HM_L2),
     COMBO_END
 };
+const uint16_t PROGMEM combo_lalt_f4_t[] = {
+    TD(TD_ESC_L3_WWW),
+    TD(TD_EGUI_GH),
+    COMBO_END
+};
 
 /* Group 57: TD(TD_P0_RCS_DEL) */
 const uint16_t PROGMEM combo_p0_rcs_del[] = {
@@ -1053,18 +1078,18 @@ const uint16_t PROGMEM combo_rcsh_spc[] = {
     COMBO_END
 };
 
-/* Group 59: TD(TD_RCSE_SPC) */
-const uint16_t PROGMEM combo_rcse_spc[] = {
-    LT(2,KC_ESC),
+/* Group 59t: TD(TD_RCSE_SPC) */
+const uint16_t PROGMEM combo_rcse_spc_t[] = {
+    LT(1,KC_BTN2),
     LT(1,KC_SPC),
     COMBO_END
 };
 
 /* Group 60: LGUI(KC_D) */
 const uint16_t PROGMEM combo_lgui_d[] = {
-  MT(MOD_LALT, KC_ESC),
-  LT(2,KC_ESC),
-  COMBO_END
+    MT(MOD_LALT, KC_ESC),
+    LT(2,KC_ESC),
+    COMBO_END
 };
 
 combo_t key_combos[] = {
@@ -1156,42 +1181,48 @@ combo_t key_combos[] = {
     COMBO(combo_home, KC_HOME),
     COMBO(combo_end, KC_END),
     COMBO(combo_lalt_f4, LALT(KC_F4)),
+    COMBO(combo_lalt_f4_t, LALT(KC_F4)),
     COMBO(combo_p0_rcs_del, TD(TD_P0_RCS_DEL)),
     COMBO(combo_rcsh_spc, TD(TD_RCSH_SPC)),
-    COMBO(combo_rcse_spc, TD(TD_RCSE_SPC)),
+    COMBO(combo_rcse_spc_t, TD(TD_RCSE_SPC)),
     COMBO(combo_lgui_d, LGUI(KC_D)),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	[0] = LAYOUT_all(
-		TD(TD_EGUI_GH), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LALT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), LT(3,KC_BSPC), KC_BSPC, TD(TD_HM_WWW),
+		TD(TD_ESC_L3_WWW), KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, LT(3,KC_DEL),
+		TD(TD_EGUI_GH), LT(1,KC_1), LT(2,KC_2), MT(MOD_LCTL,KC_3), MT(MOD_LSFT,KC_4), MT(MOD_LALT,KC_5), MT(MOD_LGUI,KC_6), KC_7, KC_8, KC_9, LT(1,KC_0), MT(MOD_LCTL,KC_MINS), MT(MOD_LSFT,KC_EQL), KC_BSPC, KC_BSPC, TD(TD_HM_WWW),
 		LT(2,KC_TAB), LT(1,KC_Q), LT(3,KC_W), KC_E, LT(3,KC_R), KC_T, LT(2,KC_Y), KC_U, LT(3,KC_I), KC_O, LT(2,KC_P), KC_LBRC, KC_RBRC, LT(2,KC_BSLS), TD(TD_PU_HM_L2),
 		LT(3,KC_GRV), KC_A, LT(2,KC_S), KC_D, KC_F, LT(1,KC_G), KC_H, KC_J, LT(1,KC_K), KC_L, LT(3,KC_SCLN), TD(TD_QUOT_AL_SQUO), LT(3,KC_ENT), TD(TD_PD_ED_RCTL),
 		KC_LSFT, KC_LSFT, LT(3,KC_Z), LT(1,KC_X), KC_C, LT(2,KC_V), LT(3,KC_B), KC_N, KC_M, KC_COMM, LT(2,KC_DOT), TD(TD_SLSH_CL_QUEST), KC_RSFT, KC_UP, MT(MOD_RALT,KC_END),
-		MT(MOD_LCTL,KC_PDOT), LT(2,KC_BSPC), MT(MOD_LALT,KC_ESC), LT(1,KC_SPC), LT(1,KC_SPC), LT(1,KC_SPC), KC_RALT, LT(2,KC_ESC), KC_LEFT, KC_DOWN, KC_RGHT
+		MT(MOD_LCTL,KC_PDOT), LT(2,KC_BSPC), MT(MOD_LALT,KC_ESC), LT(1,KC_SPC), LT(1,KC_SPC), LT(1,KC_SPC), LT(1,KC_BTN2), LT(2,KC_ESC), KC_LEFT, KC_DOWN, KC_RGHT
 	),
 
 	[1] = LAYOUT_all(
-		KC_UP, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7,KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_END, KC_END, QK_COMBO_TOGGLE,
+
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_UP, KC_EXLM, KC_AT, KC_HASH, KC_DLR, KC_PERC, KC_CIRC, KC_AMPR,KC_ASTR, KC_LPRN, KC_RPRN, KC_UNDS, KC_PLUS, KC_END, KC_END, QK_COMBO_TOGGLE,
 		KC_DOWN, KC_LEFT, KC_RGHT, RCS(KC_PGUP), RCS(KC_PGDN), LCTL(KC_T), KC_TRNS, KC_TRNS, LCTL(LGUI(KC_D)), KC_MYCM, RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), QK_COMBO_ON,
 		RCS(KC_UP), LCTL(KC_LEFT), LCTL(KC_RGHT), RCS(KC_DOWN), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB), LCTL(LGUI(KC_LEFT)), LCTL(LGUI(KC_F4)), LCTL(LGUI(KC_RGHT)), TD(TD_SELTEX_BFALL), TD(TD_SELTEX_AFALL), LGUI(KC_TAB), QK_COMBO_OFF,
 		LSA(KC_P), KC_TRNS, TD(TD_SELTEX_BFALL), TD(TD_SELTEX_AFALL), LCTL(KC_C), LCTL(KC_V), LGUI(KC_TAB), LCTL(KC_N), KC_APP, LALT(KC_ESC), LSA(KC_ESC), LALT(KC_LEFT), LALT(KC_RGHT), LCTL(KC_EQL), KC_TRNS,
-		LALT(KC_ENT), KC_F5, LGUI(KC_H), KC_SPC, KC_SPC, KC_SPC, KC_PSCR, KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
-  ),
+		LALT(KC_ENT), KC_F5, LGUI(KC_H), KC_SPC, KC_SPC, KC_SPC, LCTL(KC_F), KC_PSCR, LCTL(KC_0), LCTL(KC_MINS), LCTL(KC_1)
+    ),
 
 	[2] = LAYOUT_all(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		LALT(KC_F4), KC_MYCM, KC_CALC, LCTL(KC_F), KC_PSLS, LALT(KC_LEFT), LALT(KC_RGHT), LSA(KC_8), KC_LSFT, LCTL(KC_C), LCTL(KC_V), LSFT(KC_TAB), KC_TAB, LCTL(KC_A), LCTL(KC_A), KC_MYCM,
 		KC_DEL, KC_P7, KC_P8, KC_P9, KC_PAST, RCS(KC_T), KC_TRNS, LSA(KC_7), KC_INS, KC_TRNS, KC_TRNS, RCS(KC_HOME), RCS(KC_END), LCTL(KC_E), RCS(KC_PGUP),
 		KC_NUM, KC_P4, KC_P5, KC_P6, KC_PMNS, KC_TRNS, LCTL(KC_H), LSA(KC_9), LALT(KC_GRV), LGUI(KC_L), LALT(KC_UP), LALT(KC_DOWN), LCTL(KC_L), RCS(KC_PGDN),
 		KC_P0, KC_TRNS, KC_P1, KC_P2, KC_P3, KC_PPLS, LCTL(KC_B), LSA(KC_1), LSA(KC_2), LSA(KC_Q), LGUI(KC_DOT), LCTL(KC_B), KC_WWW_HOME, LCTL(KC_T), RCS(KC_T),
-		KC_WWW_HOME, RCS(KC_T), LCTL(KC_A), KC_PENT, KC_PENT, KC_PENT, LCTL(KC_H), LCTL(KC_H), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB)
+		KC_WWW_HOME, RCS(KC_T), LCTL(KC_A), KC_PENT, KC_PENT, KC_PENT, KC_F5, LCTL(KC_H), RCS(KC_TAB), LCTL(KC_W), LCTL(KC_TAB)
 	),
 
 	[3] = LAYOUT_all(
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_F11, LALT(KC_LEFT), LALT(KC_RGHT), KC_F13, KC_F14, KC_F15, KC_F16, KC_F17, KC_F18, KC_F19, KC_F20, KC_F21, KC_F22, KC_F23, KC_F23, KC_F24,
 		KC_HOME, KC_PGUP, KC_UP, LALT(KC_ESC), LSA(KC_ESC), LCTL(KC_EQL), LCTL(KC_1), KC_MPRV, KC_F, KC_MPLY, KC_C, KC_LSFT, LSA(KC_8), LSA(KC_7), MEH(KC_TAB),
 		KC_F7, KC_PGDN, KC_DOWN, MEH(KC_TAB), LCA(KC_TAB), LCTL(KC_MINS), LCTL(KC_0), KC_MNXT, KC_MRWD, KC_MFFD, LALT(KC_GRV), LSA(KC_9), LALT(KC_F4), LCA(KC_TAB),
-		KC_END, KC_TRNS, KC_LEFT, KC_RGHT, KC_TRNS, KC_TRNS, QK_BOOT, KC_VOLD, KC_VOLU, LALT(KC_LEFT), LALT(KC_RGHT), LCTL(KC_Z), RCS(KC_Z), KC_TRNS, RGB_TOG,
-		KC_TRNS, KC_SLSH, LGUI(KC_X), KC_MUTE, KC_MUTE, KC_MUTE, KC_MPLY, KC_MPLY, KC_TRNS, KC_TRNS, KC_TRNS
+		KC_END, KC_TRNS, KC_LEFT, KC_RGHT, KC_TRNS, KC_TRNS, QK_BOOT, KC_VOLD, KC_VOLU, LALT(KC_LEFT), LALT(KC_RGHT), LCTL(KC_Z), RCS(KC_Z), KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_SLSH, LGUI(KC_X), KC_MUTE, KC_MUTE, KC_MUTE, LGUI(KC_X), KC_MPLY, KC_TRNS, KC_TRNS, KC_TRNS
 	),
 };

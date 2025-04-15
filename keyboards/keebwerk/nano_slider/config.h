@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SLIDER_PIN D4
 
+#define RGB_MATRIX_DEFAULT_ON false          // 上电后默认关闭
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_NONE  // 默认模式设为“无”  
+
 /*
  * Feature disable options
  *  These options are also useful to firmware size reduction.
