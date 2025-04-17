@@ -172,11 +172,11 @@ tap_dance_action_t tap_dance_actions[] = {
 
 
 // Combos setting
-const uint16_t PROGMEM combo_meh_tab[]={TD(TD_F_F5),LT(_SCALE,KC_LEFT),COMBO_END};
-const uint16_t PROGMEM combo_lca_tab[]={TD(TD_C_MYCM),KC_RGHT,COMBO_END};
-const uint16_t PROGMEM combo_lalt_left[]={TD(TD_F_F5),KC_UP,COMBO_END};
+const uint16_t PROGMEM combo_meh_tab[]={TD(TD_C_MYCM),LT(_SCALE,KC_LEFT),COMBO_END};
+const uint16_t PROGMEM combo_lca_tab[]={TD(TD_F_F5),KC_RGHT,COMBO_END};
+const uint16_t PROGMEM combo_lalt_left[]={TD(TD_C_MYCM),KC_UP,COMBO_END};
 const uint16_t PROGMEM combo_lalt_right[]={KC_UP,TD(TD_C_MYCM),COMBO_END};
-const uint16_t PROGMEM combo_www_rcs_t[]={TD(TD_C_MYCM),TD(TD_SP_LN_ET),COMBO_END};
+const uint16_t PROGMEM combo_www_rcs_t[]={TD(TD_F_F5),TD(TD_SP_LN_ET),COMBO_END};
 const uint16_t PROGMEM combo_esc_tsk_guid[]={KC_RGHT,TD(TD_SP_LN_ET),COMBO_END};
 const uint16_t PROGMEM combo_ltb_gl[]={LT(_SCALE,KC_LEFT),KC_DOWN,COMBO_END};
 const uint16_t PROGMEM combo_rtb_gr[]={KC_DOWN,KC_RGHT,COMBO_END};
@@ -205,7 +205,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* Base */
     [_MEDIA] = LAYOUT(
         TD(TD_MU_TG_CL),
-        TD(TD_F_F5), KC_UP, TD(TD_C_MYCM),
+        TD(TD_C_MYCM), KC_UP, TD(TD_F_F5),
         LT(_SCALE, KC_LEFT), KC_DOWN, KC_RGHT, TD(TD_SP_LN_ET)
     ),
     [_NAV] = LAYOUT( 
