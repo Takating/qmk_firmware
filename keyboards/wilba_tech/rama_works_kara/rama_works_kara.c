@@ -13,13 +13,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef RGB_BACKLIGHT_M60_A
-#    error RGB_BACKLIGHT_M60_A not defined
-#else
-#    include "drivers/led/issi/is31fl3731.h"
+#if RGB_BACKLIGHT_ENABLED
+#    ifndef RGB_BACKLIGHT_M60_A
+#        error RGB_BACKLIGHT_M60_A not defined
+#    else
+#        include "drivers/led/issi/is31fl3731.h"
+#    endif
 #endif
 
-#if defined(RGB_MATRIX_ENABLE) || defined(RGB_BACKLIGHT_M60_A)
+#if RGB_BACKLIGHT_ENABLED && (defined(RGB_MATRIX_ENABLE) || defined(RGB_BACKLIGHT_M60_A))
 const is31fl3731_led_t PROGMEM g_is31fl3731_leds[IS31FL3731_LED_COUNT] = {
 /* Refer to IS31 manual for these locations
  *   driver
